@@ -1,0 +1,22 @@
+# Jira Configuration (Required)
+# Your Jira instance URL (e.g., https://your-company.atlassian.net)
+JIRA_URL=https://your-company.atlassian.net
+
+# Your Jira username/email address
+JIRA_USERNAME=your-email@company.com
+
+# Your Jira API token (get from: https://id.atlassian.com/manage-profile/security/api-tokens)
+JIRA_API_TOKEN=your-jira-api-token-here
+
+# Application Configuration (Optional)
+# Logging level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+LOG_LEVEL=INFO
+
+# Enable debug mode (true/false)
+DEBUG=false
+
+# Environment: development, staging, production
+ENVIRONMENT=development
+
+# Output directory for downloaded files
+OUTPUT_DIR=output

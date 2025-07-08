@@ -1,0 +1,64 @@
+# Cursor Rules for Jirabot Project
+
+## Project Context
+This is a Jira bot project designed to interact with Jira APIs and potentially integrate with other services like Slack, built with Python.
+
+## Code Style Guidelines
+- Use Python 3.8+ features
+- Follow PEP 8 style guidelines
+- Use type hints for better code clarity
+- Follow Google or NumPy docstring conventions
+- Use meaningful variable and function names
+- Prefer async/await for I/O operations
+- Use proper error handling with try/except blocks
+- Use f-strings for string formatting
+
+## Project Structure
+- `/src` - Source code
+- `/src/api` - API related code (Jira, Slack, etc.)
+- `/src/utils` - Utility functions
+- `/src/models` - Data models and schemas
+- `/src/config` - Configuration files
+- `/tests` - Test files using pytest
+- `/docs` - Documentation
+- `requirements.txt` - Python dependencies
+- `pyproject.toml` - Project configuration
+
+## Development Guidelines
+- Always include proper error handling
+- Use logging module for debugging and monitoring
+- Use environment variables for sensitive data
+- Follow REST API best practices
+- Implement proper rate limiting for API calls
+- Add unit tests using pytest
+- Use virtual environments (venv or conda)
+- Pin dependency versions in requirements.txt
+
+## Dependencies
+- Use latest stable versions of packages
+- Prefer well-maintained packages from PyPI
+- Use requests or httpx for HTTP calls
+- Use pydantic for data validation
+- Use python-dotenv for environment variables
+- Keep dependencies minimal and focused
+
+## Security
+- Never commit API keys or sensitive data
+- Use proper authentication mechanisms
+- Validate all inputs using pydantic or similar
+- Sanitize data before processing
+- Use secrets module for sensitive operations
+
+## API Integration
+- Handle API rate limits gracefully with backoff
+- Implement retry logic for failed requests
+- Cache responses when appropriate using functools.lru_cache
+- Use proper HTTP status code handling
+- Use async/await for concurrent API calls
+
+## Testing
+- Use pytest for testing
+- Aim for high test coverage
+- Use fixtures for test data
+- Mock external API calls
+- Test error conditions
