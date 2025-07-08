@@ -34,6 +34,72 @@ This is a Jira bot project designed to interact with Jira APIs and potentially i
 - Use virtual environments (venv or conda)
 - Pin dependency versions in requirements.txt
 
+## Development Workflow (CRITICAL - Always Follow)
+### 🚨 ALWAYS Activate Virtual Environment First
+- **BEFORE ANY PYTHON COMMANDS**: `source venv/bin/activate`
+- This is MANDATORY for running tests, code, or any Python operations
+- If commands fail with import errors, check venv activation
+
+### Testing Requirements (99% Coverage Standard)
+- **Run tests**: `python -m pytest tests/ --cov=src --cov=download_story_subtasks --cov=download_epic_issues --cov-report=term-missing`
+- **Minimum coverage**: 80% (project currently at 99%)
+- **Test types**: Unit, integration, async, CLI tests
+- **Mocking**: Mock all external dependencies (JiraClient, file I/O, API calls)
+- **Async testing**: Use `@pytest.mark.asyncio` for async functions
+- **Fixtures**: Use realistic test data matching Pydantic model structures
+
+### Code Quality Checks (Run Before Committing)
+- **Format**: `black src tests *.py`
+- **Lint**: `flake8 src tests *.py`
+- **Type check**: `mypy src *.py`
+- **All at once**: `black src tests *.py && flake8 src tests *.py && mypy src *.py`
+
+### Git Workflow and Commit Standards
+- **Branch naming**: `feature/description` or `fix/description`
+- **Commit types**: `feat:`, `fix:`, `test:`, `docs:`, `refactor:`, `chore:`
+- **Commit format**:
+  ```
+  type: brief description (50 chars max)
+
+  - Detailed bullet point 1
+  - Detailed bullet point 2
+  - Reference issues: #123
+  ```
+- **Commit in logical groups**: Foundation → Core code → Tests → Documentation
+- **Always test before committing**: Run full test suite with coverage
+
+## Command Workflow Template (Follow This Sequence)
+### When Making Any Changes:
+```bash
+# 1. MANDATORY: Activate virtual environment
+source venv/bin/activate
+
+# 2. Make your changes following coding standards
+
+# 3. Run comprehensive tests
+python -m pytest tests/ --cov=src --cov=download_story_subtasks --cov=download_epic_issues --cov-report=term-missing
+
+# 4. Check code quality
+black src tests *.py && flake8 src tests *.py && mypy src *.py
+
+# 5. Stage and commit in logical groups
+git add [related-files]
+git commit -m "type: brief description
+
+- Detailed explanation point 1
+- Detailed explanation point 2"
+
+# 6. Push changes
+git push origin branch-name
+```
+
+### When Running Application Scripts:
+```bash
+source venv/bin/activate
+python download_story_subtasks.py PROJ-123 -v
+python download_epic_issues.py PROJ-456 -v
+```
+
 ## Dependencies
 - Use latest stable versions of packages
 - Prefer well-maintained packages from PyPI
@@ -56,9 +122,20 @@ This is a Jira bot project designed to interact with Jira APIs and potentially i
 - Use proper HTTP status code handling
 - Use async/await for concurrent API calls
 
-## Testing
-- Use pytest for testing
-- Aim for high test coverage
-- Use fixtures for test data
-- Mock external API calls
-- Test error conditions
+## Testing (99% Coverage Achieved!)
+- Use pytest for testing with pytest.ini configuration
+- **Coverage requirement**: Minimum 80%, currently at 99%
+- Use realistic fixtures matching Pydantic model structures
+- **Mock external dependencies**: JiraClient, file I/O, API calls, async operations
+- Test both success and error scenarios
+- **Async testing**: Use `@pytest.mark.asyncio` and AsyncMock for async functions
+- **Test structure**: TestClass → fixtures → test methods with descriptive names
+- **Integration tests**: Test complete workflows end-to-end
+- **CLI testing**: Use Click's CliRunner for command-line interface tests
+
+## File and Project Management
+- **Output directory**: `output/` remains untracked (contains generated files)
+- **Virtual environment**: `venv/` excluded from git
+- **Configuration**: Use `pytest.ini` for test settings, `pyproject.toml` for project config
+- **Documentation**: Keep README.md and CONTRIBUTING.md updated with workflow changes
+- **Environment**: Use `env_template.txt` for environment variable documentation
