@@ -12,6 +12,9 @@ from collections import defaultdict
 import click
 from dotenv import load_dotenv
 
+# Add parent directory to path so we can import src modules
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 from src.api.jira_client import JiraClient
 from src.config.settings import settings
 from src.models.jira_models import EpicDownloadResult
