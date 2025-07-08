@@ -63,27 +63,104 @@ cp .env.example .env
 
 ### Development
 
+#### Setting Up Development Environment
+
 ```bash
-# Activate virtual environment
+# Activate virtual environment (ALWAYS DO THIS FIRST)
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Run the application
-python -m src.main
+# Install development dependencies
+pip install -r requirements.txt
+```
 
-# Run tests
-pytest
+#### Development Workflow
 
-# Run tests with coverage
-pytest --cov=src
+##### 1. Testing (99% Coverage Achieved!)
 
+```bash
+# Run all tests with coverage
+python -m pytest tests/ --cov=src --cov=download_story_subtasks --cov=download_epic_issues --cov-report=term-missing
+
+# Run specific test file
+python -m pytest tests/test_download_story_subtasks.py -v
+
+# Run specific test class
+python -m pytest tests/test_download_story_subtasks.py::TestCreateMarkdownFromStoryData -v
+
+# Run tests in parallel (if installed pytest-xdist)
+python -m pytest tests/ -n auto
+```
+
+**Test Configuration:**
+- Minimum 80% coverage requirement (currently at 99%)
+- Async testing with `pytest-asyncio`
+- Comprehensive mocking of external dependencies
+- Integration tests for end-to-end workflows
+
+##### 2. Code Quality
+
+```bash
 # Format code
-black src tests
+black src tests *.py
 
 # Lint code
-flake8 src tests
+flake8 src tests *.py
 
 # Type checking
-mypy src
+mypy src *.py
+
+# Run all quality checks
+black src tests *.py && flake8 src tests *.py && mypy src *.py
+```
+
+##### 3. Git Workflow
+
+**Before making changes:**
+```bash
+# Create feature branch
+git checkout -b feature/your-feature-name
+```
+
+**After making changes:**
+```bash
+# 1. Run tests first
+source venv/bin/activate
+python -m pytest tests/ --cov=src --cov-report=term-missing
+
+# 2. Check code quality
+black src tests *.py
+flake8 src tests *.py
+
+# 3. Stage and commit in logical groups
+git add [related-files]
+git commit -m "type: brief description
+
+- Detailed bullet point 1
+- Detailed bullet point 2"
+
+# 4. Push changes
+git push origin feature/your-feature-name
+```
+
+**Commit Types:**
+- `feat:` - New features
+- `fix:` - Bug fixes
+- `test:` - Adding or updating tests
+- `docs:` - Documentation changes
+- `refactor:` - Code refactoring
+- `chore:` - Maintenance tasks
+
+##### 4. Running the Application
+
+```bash
+# Download epic with all sub-tasks
+python download_epic_issues.py PROJ-123
+
+# Download story with sub-tasks
+python download_story_subtasks.py PROJ-123
+
+# With verbose logging for debugging
+python download_story_subtasks.py PROJ-123 -v
 ```
 
 ## Features
@@ -164,14 +241,25 @@ This project uses:
 
 ## Contributing
 
+We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines including:
+
+- 🛠️ Development environment setup
+- 🧪 Testing requirements (99% coverage!)
+- 📝 Git commit guidelines and workflow
+- 🔍 Code quality standards
+- 📋 Pull request process
+
+**Quick Start:**
 1. Fork the repository
-2. Create a feature branch
-3. Set up your development environment with `pip install -r requirements-dev.txt`
-4. Make your changes following PEP 8 style guidelines
-5. Add tests for new functionality
-6. Run the test suite and ensure all tests pass
-7. Format your code with `black` and check with `flake8`
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. **Always activate venv**: `source venv/bin/activate`
+4. Make changes following our coding standards
+5. **Run tests**: `python -m pytest tests/ --cov=src --cov-report=term-missing`
+6. **Check code quality**: `black src tests *.py && flake8 src tests *.py`
+7. Commit in logical groups with clear messages
 8. Submit a pull request
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for complete details.
 
 ## License
 
