@@ -123,7 +123,7 @@ class JiraIssue(BaseModel):
 class JiraSearchResult(BaseModel):
     """Jira search result model."""
 
-    expand: str
+    expand: Optional[str] = None
     start_at: int = Field(..., alias="startAt")
     max_results: int = Field(..., alias="maxResults")
     total: int
