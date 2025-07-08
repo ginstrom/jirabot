@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unit tests for download_story_subtasks.py"""
+"""Unit tests for scripts.download_story_subtasks.py"""
 
 import asyncio
 import pytest
@@ -9,7 +9,7 @@ from pathlib import Path
 import json
 
 from src.models.jira_models import StoryDownloadResult, JiraIssue, JiraIssueFields
-from download_story_subtasks import (
+from scripts.download_story_subtasks import (
     create_markdown_from_story_data,
     download_story_subtasks,
     main,
@@ -267,12 +267,12 @@ class TestDownloadStorySubtasks:
         self, mock_jira_issue, mock_subtasks, tmp_path
     ):
         """Test successful download of story and subtasks."""
-        with patch("download_story_subtasks.JiraClient") as mock_jira_client, patch(
-            "download_story_subtasks.ensure_directory_exists"
+        with patch("scripts.download_story_subtasks.JiraClient") as mock_jira_client, patch(
+            "scripts.download_story_subtasks.ensure_directory_exists"
         ) as mock_ensure_dir, patch(
-            "download_story_subtasks.get_file_size"
+            "scripts.download_story_subtasks.get_file_size"
         ) as mock_get_size, patch(
-            "download_story_subtasks.extract_text_from_adf"
+            "scripts.download_story_subtasks.extract_text_from_adf"
         ) as mock_extract_text, patch(
             "builtins.open", mock_open()
         ) as mock_file:
@@ -312,16 +312,16 @@ class TestDownloadStorySubtasks:
         self, mock_jira_issue, mock_subtasks
     ):
         """Test download with default parameters."""
-        with patch("download_story_subtasks.JiraClient") as mock_jira_client, patch(
-            "download_story_subtasks.ensure_directory_exists"
+        with patch("scripts.download_story_subtasks.JiraClient") as mock_jira_client, patch(
+            "scripts.download_story_subtasks.ensure_directory_exists"
         ) as mock_ensure_dir, patch(
-            "download_story_subtasks.get_file_size"
+            "scripts.download_story_subtasks.get_file_size"
         ) as mock_get_size, patch(
-            "download_story_subtasks.extract_text_from_adf"
+            "scripts.download_story_subtasks.extract_text_from_adf"
         ) as mock_extract_text, patch(
-            "download_story_subtasks.settings"
+            "scripts.download_story_subtasks.settings"
         ) as mock_settings, patch(
-            "download_story_subtasks.generate_timestamp_filename"
+            "scripts.download_story_subtasks.generate_timestamp_filename"
         ) as mock_timestamp, patch(
             "builtins.open", mock_open()
         ) as mock_file:
@@ -349,8 +349,8 @@ class TestDownloadStorySubtasks:
         self, mock_jira_issue, mock_subtasks
     ):
         """Test error handling when Jira client fails."""
-        with patch("download_story_subtasks.JiraClient") as mock_jira_client, patch(
-            "download_story_subtasks.ensure_directory_exists"
+        with patch("scripts.download_story_subtasks.JiraClient") as mock_jira_client, patch(
+            "scripts.download_story_subtasks.ensure_directory_exists"
         ):
 
             # Setup mock to raise exception
@@ -365,12 +365,12 @@ class TestDownloadStorySubtasks:
     @pytest.mark.asyncio
     async def test_download_story_subtasks_no_subtasks(self, mock_jira_issue, tmp_path):
         """Test download when story has no subtasks."""
-        with patch("download_story_subtasks.JiraClient") as mock_jira_client, patch(
-            "download_story_subtasks.ensure_directory_exists"
+        with patch("scripts.download_story_subtasks.JiraClient") as mock_jira_client, patch(
+            "scripts.download_story_subtasks.ensure_directory_exists"
         ) as mock_ensure_dir, patch(
-            "download_story_subtasks.get_file_size"
+            "scripts.download_story_subtasks.get_file_size"
         ) as mock_get_size, patch(
-            "download_story_subtasks.extract_text_from_adf"
+            "scripts.download_story_subtasks.extract_text_from_adf"
         ) as mock_extract_text, patch(
             "builtins.open", mock_open()
         ) as mock_file:
@@ -398,10 +398,10 @@ class TestDownloadStorySubtasks:
 class TestMainFunction:
     """Test cases for the main CLI function."""
 
-    @patch("download_story_subtasks.asyncio.run")
-    @patch("download_story_subtasks.print_success_message")
-    @patch("download_story_subtasks.validate_settings")
-    @patch("download_story_subtasks.setup_logging")
+    @patch("scripts.download_story_subtasks.asyncio.run")
+    @patch("scripts.download_story_subtasks.print_success_message")
+    @patch("scripts.download_story_subtasks.validate_settings")
+    @patch("scripts.download_story_subtasks.setup_logging")
     def test_main_success(
         self,
         mock_setup_logging,
@@ -431,10 +431,10 @@ class TestMainFunction:
         mock_validate_settings.assert_called_once_with(False)
         mock_print_success.assert_called_once()
 
-    @patch("download_story_subtasks.asyncio.run")
-    @patch("download_story_subtasks.handle_download_error")
-    @patch("download_story_subtasks.validate_settings")
-    @patch("download_story_subtasks.setup_logging")
+    @patch("scripts.download_story_subtasks.asyncio.run")
+    @patch("scripts.download_story_subtasks.handle_download_error")
+    @patch("scripts.download_story_subtasks.validate_settings")
+    @patch("scripts.download_story_subtasks.setup_logging")
     def test_main_error(
         self,
         mock_setup_logging,
@@ -457,10 +457,10 @@ class TestMainFunction:
         mock_handle_error.assert_called_once()
         assert "Download failed" in str(mock_handle_error.call_args[0][0])
 
-    @patch("download_story_subtasks.asyncio.run")
-    @patch("download_story_subtasks.print_success_message")
-    @patch("download_story_subtasks.validate_settings")
-    @patch("download_story_subtasks.setup_logging")
+    @patch("scripts.download_story_subtasks.asyncio.run")
+    @patch("scripts.download_story_subtasks.print_success_message")
+    @patch("scripts.download_story_subtasks.validate_settings")
+    @patch("scripts.download_story_subtasks.setup_logging")
     def test_main_with_options(
         self,
         mock_setup_logging,
@@ -571,14 +571,14 @@ class TestIntegration:
         }
         mock_subtasks = [mock_subtask]
 
-        with patch("download_story_subtasks.JiraClient") as mock_jira_client, patch(
-            "download_story_subtasks.ensure_directory_exists"
+        with patch("scripts.download_story_subtasks.JiraClient") as mock_jira_client, patch(
+            "scripts.download_story_subtasks.ensure_directory_exists"
         ) as mock_ensure_dir, patch(
-            "download_story_subtasks.get_file_size"
+            "scripts.download_story_subtasks.get_file_size"
         ) as mock_get_size, patch(
-            "download_story_subtasks.extract_text_from_adf"
+            "scripts.download_story_subtasks.extract_text_from_adf"
         ) as mock_extract_text, patch(
-            "download_story_subtasks.StoryDownloadResult"
+            "scripts.download_story_subtasks.StoryDownloadResult"
         ) as mock_result_class:
 
             # Setup mocks

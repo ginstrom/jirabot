@@ -19,10 +19,12 @@ This is a Jira bot project designed to interact with Jira APIs and potentially i
 - `/src/utils` - Utility functions
 - `/src/models` - Data models and schemas
 - `/src/config` - Configuration files
+- `/scripts` - Download scripts (epic and story downloaders)
 - `/tests` - Test files using pytest
 - `/docs` - Documentation
 - `requirements.txt` - Python dependencies
 - `pyproject.toml` - Project configuration
+- `Makefile` - Build automation and shortcuts
 
 ## Development Guidelines
 - Always include proper error handling
@@ -41,7 +43,7 @@ This is a Jira bot project designed to interact with Jira APIs and potentially i
 - If commands fail with import errors, check venv activation
 
 ### Testing Requirements (99% Coverage Standard)
-- **Run tests**: `python -m pytest tests/ --cov=src --cov=download_story_subtasks --cov=download_epic_issues --cov-report=term-missing`
+- **Run tests**: `python -m pytest tests/ --cov=src --cov=scripts/download_story_subtasks --cov=scripts/download_epic_issues --cov-report=term-missing`
 - **Minimum coverage**: 80% (project currently at 99%)
 - **Test types**: Unit, integration, async, CLI tests
 - **Mocking**: Mock all external dependencies (JiraClient, file I/O, API calls)
@@ -49,10 +51,11 @@ This is a Jira bot project designed to interact with Jira APIs and potentially i
 - **Fixtures**: Use realistic test data matching Pydantic model structures
 
 ### Code Quality Checks (Run Before Committing)
-- **Format**: `black src tests *.py`
-- **Lint**: `flake8 src tests *.py`
-- **Type check**: `mypy src *.py`
-- **All at once**: `black src tests *.py && flake8 src tests *.py && mypy src *.py`
+- **Format**: `black src tests scripts/*.py`
+- **Lint**: `flake8 src tests scripts/*.py`
+- **Type check**: `mypy src scripts/*.py`
+- **All at once**: `black src tests scripts/*.py && flake8 src tests scripts/*.py && mypy src scripts/*.py`
+- **Using Makefile**: `make quality` (recommended)
 
 ### Git Workflow and Commit Standards
 - **Branch naming**: `feature/description` or `fix/description`
@@ -77,10 +80,10 @@ source venv/bin/activate
 # 2. Make your changes following coding standards
 
 # 3. Run comprehensive tests
-python -m pytest tests/ --cov=src --cov=download_story_subtasks --cov=download_epic_issues --cov-report=term-missing
+python -m pytest tests/ --cov=src --cov=scripts/download_story_subtasks --cov=scripts/download_epic_issues --cov-report=term-missing
 
 # 4. Check code quality
-black src tests *.py && flake8 src tests *.py && mypy src *.py
+black src tests scripts/*.py && flake8 src tests scripts/*.py && mypy src scripts/*.py
 
 # 5. Stage and commit in logical groups
 git add [related-files]
@@ -95,9 +98,14 @@ git push origin branch-name
 
 ### When Running Application Scripts:
 ```bash
+# Using Makefile (recommended)
+make story PROJ-123
+make epic PROJ-456
+
+# Or directly with scripts
 source venv/bin/activate
-python download_story_subtasks.py PROJ-123 -v
-python download_epic_issues.py PROJ-456 -v
+python scripts/download_story_subtasks.py PROJ-123 -v
+python scripts/download_epic_issues.py PROJ-456 -v
 ```
 
 ## Dependencies
