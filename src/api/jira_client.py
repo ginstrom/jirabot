@@ -162,12 +162,14 @@ class JiraClient:
         Returns:
             List of JiraIssue objects
         """
-        jql = f'"Epic Link" = {epic_key}'
+        # Check both Epic Link (legacy) and Parent (modern) fields
+        jql = f'("Epic Link" = {epic_key} OR parent = {epic_key})'
         issues = []
         start_at = 0
         max_results = 100
 
         logger.info(f"Fetching issues for epic {epic_key}")
+        logger.info(f"JQL Query: {jql}")
 
         while True:
             result = await self.search_issues(
@@ -247,3 +249,64 @@ class JiraClient:
             JiraIssue object for the story
         """
         return await self.get_issue(story_key)
+
+    async def get_board_issues(
+        self,
+        project_key: str,
+        board_id: Optional[str] = None,
+        parent_issue: Optional[str] = None,
+        additional_jql: Optional[str] = None,
+        fields: Optional[List[str]] = None,
+    ) -> List[JiraIssue]:
+        """Get all issues from a project board with optional filters.
+
+        Args:
+            project_key: Project key (e.g., 'ELIZA')
+            board_id: Optional board ID for filtering
+            parent_issue: Optional parent issue key/ID for filtering
+            additional_jql: Additional JQL conditions
+            fields: List of fields to return
+
+        Returns:
+            List of JiraIssue objects
+        """
+        # Build JQL query
+        jql_parts = [f"project = {project_key}"]
+
+        if parent_issue:
+            # This could be an epic link or parent issue
+            jql_parts.append(
+                f'("Epic Link" = {parent_issue} OR parent = {parent_issue})'
+            )
+
+        if additional_jql:
+            jql_parts.append(additional_jql)
+
+        # Order by created date descending to get most recent first
+        jql = " AND ".join(jql_parts) + " ORDER BY created DESC"
+
+        issues = []
+        start_at = 0
+        max_results = 100
+
+        logger.info(f"Fetching board issues for project {project_key}")
+        logger.info(f"JQL Query: {jql}")
+
+        while True:
+            result = await self.search_issues(
+                jql=jql,
+                fields=fields,
+                start_at=start_at,
+                max_results=max_results,
+            )
+
+            issues.extend(result.issues)
+
+            if len(result.issues) < max_results:
+                break
+
+            start_at += max_results
+            logger.info(f"Fetched {len(issues)} issues so far...")
+
+        logger.info(f"Total issues found: {len(issues)}")
+        return issues
